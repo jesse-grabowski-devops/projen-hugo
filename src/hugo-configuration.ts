@@ -176,12 +176,14 @@ export class Site extends Component {
 
   private synthSiteConfig() {
     // Circumvent JSII5016
-    const { buildOptions = {}, ...remainder } = this.options;
+    let contents;
+    if (typeof this.options.buildOptions !== 'undefined') {
+      const { buildOptions, ...remainder } = this.options;
+      contents = { ...remainder, build: buildOptions };
+    } else {
+      contents = this.options;
+    }
 
-    return resolve({
-      ...remainder,
-      build: buildOptions,
-    },
-    { omitEmpty: true });
+    return resolve(contents, { omitEmpty: true });
   }
 }
