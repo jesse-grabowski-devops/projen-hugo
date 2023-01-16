@@ -165,15 +165,18 @@ export interface HugoConfiguration {
 }
 
 export class Site extends Component {
+  readonly options: HugoConfiguration;
+
   constructor(project: Project, options: HugoConfiguration) {
     super(project);
+    this.options = options;
 
-    new TomlFile(project, 'config.toml', { obj: () => resolve(options, { omitEmpty: true }) });
+    new TomlFile(project, 'config.toml', { obj: () => this.synthSiteConfig() });
   }
 
-  private synthSiteConfig(options: HugoConfiguration) {
+  private synthSiteConfig() {
     // Circumvent JSII5016
-    const { buildOptions, ...remainder } = options;
+    const { buildOptions, ...remainder } = this.options;
 
     return resolve({
       ...remainder,
