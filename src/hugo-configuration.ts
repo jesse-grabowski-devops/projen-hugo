@@ -97,7 +97,7 @@ export interface HugoConfiguration {
   readonly archetypeDir?: string;
   readonly assetDir?: string;
   readonly baseURL: string;
-  readonly build?: HugoBuildConfiguration;
+  readonly buildOptions?: HugoBuildConfiguration;
   readonly buildDrafts?: boolean;
   readonly buildExpired?: boolean;
   readonly buildFuture?: boolean;
@@ -169,5 +169,16 @@ export class Site extends Component {
     super(project);
 
     new TomlFile(project, 'config.toml', { obj: () => resolve(options, { omitEmpty: true }) });
+  }
+
+  private synthSiteConfig(options: HugoConfiguration) {
+    // Circumvent JSII5016
+    const { buildOptions, ...remainder } = options;
+
+    return resolve({
+      ...remainder,
+      build: buildOptions,
+    },
+    { omitEmpty: true });
   }
 }
