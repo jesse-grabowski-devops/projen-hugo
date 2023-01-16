@@ -165,7 +165,7 @@ export interface HugoConfiguration {
 }
 
 export class Site extends Component {
-  readonly options: HugoConfiguration;
+  public readonly options: HugoConfiguration;
 
   constructor(project: Project, options: HugoConfiguration) {
     super(project);
@@ -177,11 +177,11 @@ export class Site extends Component {
   private synthSiteConfig() {
     // Circumvent JSII5016
     let contents;
-    if (typeof this.options.buildOptions !== 'undefined') {
+    if (typeof this.options !== 'undefined') {
       const { buildOptions, ...remainder } = this.options;
       contents = { ...remainder, build: buildOptions };
     } else {
-      contents = this.options;
+      contents = {};
     }
 
     return resolve(contents, { omitEmpty: true });
