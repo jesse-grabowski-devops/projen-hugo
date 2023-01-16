@@ -176,7 +176,7 @@ export class Site extends Component {
 
   private synthSiteConfig() {
     // Circumvent JSII5016
-    const { buildOptions, ...remainder } = this.options;
+    const { buildOptions = {}, ...remainder } = this.options;
 
     return resolve({
       ...remainder,
