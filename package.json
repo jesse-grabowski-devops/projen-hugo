@@ -1,5 +1,6 @@
 {
-  "name": "projen-hugo",
+  "name": "@npm-jessegrabowski/projen-hugo",
+  "description": "A projen project for building a Hugo site.",
   "repository": {
     "type": "git",
     "url": "https://github.com/github/projen-hugo.git"
@@ -30,7 +31,7 @@
   },
   "author": {
     "name": "Jesse Grabowski",
-    "email": "github@jessegrabowski.com",
+    "email": "npm@jessegrabowski.com",
     "organization": false
   },
   "devDependencies": {
@@ -55,8 +56,17 @@
     "ts-jest": "^27",
     "typescript": "^4.9.4"
   },
+  "peerDependencies": {
+    "projen": "^0.67.0"
+  },
+  "dependencies": {
+    "projen": "^0.67.0"
+  },
   "main": "lib/index.js",
   "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "version": "0.0.0",
   "jest": {
     "testMatch": [
