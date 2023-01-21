@@ -188,7 +188,7 @@ export class Netlify extends Component {
       headers.push(this.synthHeadersForPath('/*', defaultHeaders));
     }
     Object.keys(this.options.netlifyConfiguration.headers)
-      .forEach(path => headers.push(this.synthHeadersForPath(path, this.options?.netlifyConfiguration?.headers?.path ?? defaultHeaders)));
+      .forEach(path => headers.push(this.synthHeadersForPath(path, this.options?.netlifyConfiguration?.headers?.[path] ?? defaultHeaders)));
 
     return headers;
   }
