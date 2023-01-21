@@ -188,10 +188,13 @@ export class Site extends Component {
     }
 
     if (typeof this.cloudinaryOptions !== 'undefined') {
-      contents.params = {
-        ...contents.params,
-        cloudinaryCloudName: this.cloudinaryOptions.cloudName,
-        cloudinaryApiKey: this.cloudinaryOptions.apiKey,
+      contents = {
+        ...contents,
+        params: {
+          ...contents.params,
+          cloudinaryCloudName: this.cloudinaryOptions.cloudName,
+          cloudinaryApiKey: this.cloudinaryOptions.apiKey,
+        },
       };
     }
 

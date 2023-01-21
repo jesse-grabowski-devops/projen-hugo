@@ -1,6 +1,6 @@
 import { javascript } from 'projen';
-import { HugoConfiguration, Site } from './hugo-configuration';
 import { CloudinaryConfiguration } from './cloudinary-configuration';
+import { HugoConfiguration, Site } from './hugo-configuration';
 
 export interface HugoProjectOptions extends javascript.NodeProjectOptions {
   readonly hugoVersion: string;
