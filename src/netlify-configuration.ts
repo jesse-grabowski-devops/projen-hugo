@@ -207,7 +207,7 @@ export class Netlify extends Component {
   private synthPermissionsPolicy(policy: NetlifyPermissionsPolicyConfiguration) {
     return netlifyPermissionsPolicyConfigurationKeys.map(key => {
       const value = policy[key] ?? [];
-      return `${key.replace(/([a-z])([A-Z])/g, '$1-$2')}=(${value.map(this.synthPermissionsPolicyValue).join(' ')})`;
+      return `${key.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()}=(${value.map(this.synthPermissionsPolicyValue).join(' ')})`;
     }).join(', ');
   }
 
@@ -222,13 +222,13 @@ export class Netlify extends Component {
   }
 
   private synthDefaultContentSecurityPolicy() {
-    let imageSource = ['self', 'data:'];
+    let imgSrc = ['self', 'data:'];
     if (typeof this.options?.cloudinaryConfiguration?.cloudName !== 'undefined') {
-      imageSource.push(`https://res.cloudinary.com/${this.options.cloudinaryConfiguration.cloudName}/`);
+      imgSrc.push(`https://res.cloudinary.com/${this.options.cloudinaryConfiguration.cloudName}/`);
     }
     return {
       defaultSrc: ['self'],
-      imageSource: imageSource,
+      imgSrc: imgSrc,
       objectSrc: ['none'],
     };
   }
@@ -236,7 +236,7 @@ export class Netlify extends Component {
   private synthContentSecurityPolicy(policy: NetlifyContentSecurityPolicyConfiguration) {
     return netlifyContentSecurityPolicyConfigurationKeys.filter(key => policy[key]?.length ?? 0 > 0).map(key => {
       const value = policy[key] ?? [];
-      return `${key.replace(/([a-z])([A-Z])/g, '$1-$2')} ${value.map(this.synthContentSecurityPolicyValue).join(' ')}`;
+      return `${key.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()} ${value.map(this.synthContentSecurityPolicyValue).join(' ')}`;
     }).join('; ');
   }
 
