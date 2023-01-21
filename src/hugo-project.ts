@@ -15,6 +15,6 @@ export class HugoProject extends javascript.NodeProject {
   constructor(options: HugoProjectOptions) {
     super(options);
 
-    this.site = new Site(this, options.hugoConfiguration);
+    this.site = new Site(this, options.hugoConfiguration, options.cloudinaryConfiguration);
   }
 }

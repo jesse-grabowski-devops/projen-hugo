@@ -172,6 +172,7 @@ export class Site extends Component {
   constructor(project: Project, hugoOptions: HugoConfiguration, cloudinaryOptions: CloudinaryConfiguration) {
     super(project);
     this.hugoOptions = hugoOptions;
+    this.cloudinaryOptions = cloudinaryOptions;
 
     new TomlFile(project, 'config.toml', { obj: () => this.synthSiteConfig() });
   }
