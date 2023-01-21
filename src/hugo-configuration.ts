@@ -1,6 +1,6 @@
 import { Component, Project, TomlFile } from 'projen';
 import { resolve } from 'projen/lib/_resolve';
-import { CloudinaryConfiguration } from './cloudinary-configuration';
+import { HugoProjectOptions } from './hugo-project';
 
 export interface HugoBuildConfiguration {
   readonly noJSConfigInAssets?: boolean;
@@ -166,13 +166,11 @@ export interface HugoConfiguration {
 }
 
 export class Site extends Component {
-  public readonly hugoOptions: HugoConfiguration;
-  public readonly cloudinaryOptions: CloudinaryConfiguration;
+  public readonly options: HugoProjectOptions;
 
-  constructor(project: Project, hugoOptions: HugoConfiguration, cloudinaryOptions: CloudinaryConfiguration) {
+  constructor(project: Project, options: HugoProjectOptions) {
     super(project);
-    this.hugoOptions = hugoOptions;
-    this.cloudinaryOptions = cloudinaryOptions;
+    this.options = options;
 
     new TomlFile(project, 'config.toml', { obj: () => this.synthSiteConfig() });
   }
@@ -180,20 +178,20 @@ export class Site extends Component {
   private synthSiteConfig() {
     // Circumvent JSII5016
     let contents;
-    if (typeof this.hugoOptions !== 'undefined') {
-      const { buildOptions, ...remainder } = this.hugoOptions;
+    if (typeof this.options?.hugoConfiguration !== 'undefined') {
+      const { buildOptions, ...remainder } = this.options.hugoConfiguration;
       contents = { ...remainder, build: buildOptions };
     } else {
       contents = {};
     }
 
-    if (typeof this.cloudinaryOptions !== 'undefined') {
+    if (typeof this.options?.cloudinaryConfiguration !== 'undefined') {
       contents = {
         ...contents,
         params: {
           ...contents.params,
-          cloudinaryCloudName: this.cloudinaryOptions.cloudName,
-          cloudinaryApiKey: this.cloudinaryOptions.apiKey,
+          cloudinaryCloudName: this.options.cloudinaryConfiguration.cloudName,
+          cloudinaryApiKey: this.options.cloudinaryConfiguration.apiKey,
         },
       };
     }
