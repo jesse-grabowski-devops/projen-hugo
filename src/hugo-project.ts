@@ -31,6 +31,8 @@ export class HugoProject extends javascript.NodeProject {
       buildWorkflow: options?.buildWorkflow ?? !(options?.netlifyConfiguration?.enabled ?? false),
     });
 
+    this.addGitIgnore('.idea');
+
     this.site = new Site(this, options);
     this.siteDirectories = new SiteDirectories(this, options);
     this.postcss = new PostCSS(this, options);

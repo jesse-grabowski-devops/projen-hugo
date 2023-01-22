@@ -8,6 +8,12 @@ export class SiteDirectories extends Component {
     super(project);
     this.options = options;
 
+    project.addGitIgnore('/public/');
+    project.addGitIgnore('/resources/_gen/');
+    project.addGitIgnore('/assets/jsconfig.json');
+    project.addGitIgnore('hugo_stats.json');
+    project.addGitIgnore('/.hugo_build.lock');
+
     new TextFile(project, 'archetypes/.gitkeep', { marker: false });
     new TextFile(project, 'assets/.gitkeep', { marker: false });
     new TextFile(project, 'layouts/.gitkeep', { marker: false });
