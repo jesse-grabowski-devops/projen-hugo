@@ -1,7 +1,7 @@
-import { Component, TomlFile } from 'projen';
+import { Component, Project, TomlFile } from 'projen';
 import { resolve } from 'projen/lib/_resolve';
 import { arrayOfAll } from './helpers';
-import { HugoProject, HugoProjectOptions } from './hugo-project';
+import { HugoProjectOptions } from './hugo-project';
 
 export interface NetlifyRedirectConditionConfiguration {
   readonly [key: string]: string[];
@@ -179,15 +179,11 @@ export interface NetlifyConfiguration {
 export class Netlify extends Component {
   public readonly options: HugoProjectOptions;
 
-  constructor(project: HugoProject, options: HugoProjectOptions) {
+  constructor(project: Project, options: HugoProjectOptions) {
     super(project);
     this.options = options;
 
     if (this.options?.netlifyConfiguration?.enabled) {
-      // netlify manages CI/CD
-      project.removeTask('build');
-      project.removeTask('release');
-
       new TomlFile(project, 'netlify.toml', { obj: () => this.synthNetlifyConfiguration() });
     }
   }

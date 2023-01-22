@@ -26,5 +26,11 @@ export class HugoProject extends javascript.NodeProject {
     this.siteDirectories = new SiteDirectories(this, options);
 
     this.netlify = new Netlify(this, options);
+
+    if (options?.netlifyConfiguration?.enabled) {
+      // netlify manages CI/CD
+      this.removeTask('release');
+      this.removeTask('build');
+    }
   }
 }
