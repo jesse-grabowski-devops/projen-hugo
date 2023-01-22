@@ -46,6 +46,14 @@ export interface HugoMediaTypeConfiguration {
   readonly suffixes?: string[];
 }
 
+export interface HugoModuleMountConfiguration {
+  readonly source?: string;
+  readonly target?: string;
+  readonly lang?: string;
+  readonly includeFiles?: string[];
+  readonly excludeFiles?: string[];
+}
+
 export interface HugoModuleConfiguration {
   readonly noProxy?: string;
   readonly noVendor?: string;
@@ -53,6 +61,7 @@ export interface HugoModuleConfiguration {
   readonly proxy?: string;
   readonly replacements?: string;
   readonly workspace?: string;
+  readonly mounts?: HugoModuleMountConfiguration[];
 }
 
 export interface HugoOutputFormatsConfiguration {
@@ -179,19 +188,19 @@ export class Site extends Component {
   }
 
   private synthSiteConfig() {
-    // Circumvent JSII5016
-    let contents;
+    let contents: any = {
+      build: { writeStats: true },
+      module: (module ?? { mounts: [{ source: 'statis', target: 'static', excludeFiles: ['**/.gitkeep'] }] }),
+      ignoreFiles: ['^.+\\.gitkeep$'],
+    };
+
     if (typeof this.options?.hugoConfiguration !== 'undefined') {
-      const { buildOptions, ignoreFiles, ...remainder } = this.options.hugoConfiguration;
+      const { buildOptions, module, ignoreFiles, ...remainder } = this.options.hugoConfiguration;
       contents = {
         ...remainder,
-        build: (buildOptions ?? { writeStats: true }),
-        ignoreFiles: [...(ignoreFiles ?? []), '^.+\\.gitkeep$'],
-      };
-    } else {
-      contents = {
-        build: { writeStats: true },
-        ignoreFiles: ['^.+\\.gitkeep$'],
+        build: buildOptions ?? contents.build,
+        module: module ?? contents.module,
+        ignoreFiles: ignoreFiles ?? contents.ignoreFiles,
       };
     }
 
