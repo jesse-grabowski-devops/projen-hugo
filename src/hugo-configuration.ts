@@ -126,6 +126,7 @@ export interface HugoConfiguration {
   readonly frontmatter?: any;
   readonly googleAnalytics?: string;
   readonly hasCJKLanguage?: boolean;
+  readonly ignoreFiles?: string[];
   readonly imaging?: HugoImagingConfiguration;
   readonly languageCode: string;
   readonly languages?: HugoLanguagesConfiguration;
@@ -181,10 +182,17 @@ export class Site extends Component {
     // Circumvent JSII5016
     let contents;
     if (typeof this.options?.hugoConfiguration !== 'undefined') {
-      const { buildOptions, ...remainder } = this.options.hugoConfiguration;
-      contents = { ...remainder, build: buildOptions };
+      const { buildOptions, ignoreFiles, ...remainder } = this.options.hugoConfiguration;
+      contents = {
+        ...remainder,
+        build: (buildOptions ?? { writeStats: true }),
+        ignoreFiles: [...(ignoreFiles ?? []), '^.+\\.gitkeep$'],
+      };
     } else {
-      contents = {};
+      contents = {
+        build: { writeStats: true },
+        ignoreFiles: ['^.+\\.gitkeep$'],
+      };
     }
 
     if (typeof this.options?.cloudinaryConfiguration !== 'undefined') {
