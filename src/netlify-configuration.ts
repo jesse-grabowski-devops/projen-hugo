@@ -3,6 +3,16 @@ import { resolve } from 'projen/lib/_resolve';
 import { arrayOfAll } from './helpers';
 import { HugoProjectOptions } from './hugo-project';
 
+export interface NetlifyPluginConfiguration {
+  readonly package: string;
+  readonly inputs?: any;
+}
+
+export interface NetlifyPluginsConfiguration {
+  readonly autoconfigureCache?: boolean;
+  readonly plugins: NetlifyPluginConfiguration[];
+}
+
 export interface NetlifyContentSecurityPolicyConfiguration {
   readonly baseUri?: string[];
   readonly childSrc?: string[];
@@ -143,6 +153,7 @@ export interface NetlifyConfiguration {
   readonly enabled: boolean;
   readonly buildOptions?: NetlifyBuildConfiguration;
   readonly headers?: NetlifyHeadersConfiguration;
+  readonly plugins?: NetlifyPluginsConfiguration;
 }
 
 export class Netlify extends Component {
@@ -165,7 +176,21 @@ export class Netlify extends Component {
         environment: this.options?.netlifyConfiguration?.buildOptions?.environment ?? {},
       },
       headers: this.synthHeaders(),
+      plugins: this.synthPlugins(),
     }, { omitEmpty: true });
+  }
+
+  private synthPlugins() {
+    let plugins = [...this.options?.netlifyConfiguration?.plugins?.plugins ?? []];
+    if (this.options?.netlifyConfiguration?.plugins?.autoconfigureCache ?? true) {
+      plugins.push({
+        package: 'netlify-plugin-hugo-cache-resources',
+        inputs: {
+          debug: true,
+        },
+      });
+    }
+    return plugins;
   }
 
   private synthHeaders() {
@@ -236,8 +261,8 @@ export class Netlify extends Component {
   private synthContentSecurityPolicy(policy: NetlifyContentSecurityPolicyConfiguration) {
     return netlifyContentSecurityPolicyConfigurationKeys.filter(key => policy[key]?.length ?? 0 > 0).map(key => {
       const value = policy[key] ?? [];
-      return `${key.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()} ${value.map(this.synthContentSecurityPolicyValue).join(' ')}`;
-    }).join('; ');
+      return `${key.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()} ${value.map(this.synthContentSecurityPolicyValue).join(' ')};`;
+    }).join(' ');
   }
 
   private synthContentSecurityPolicyValue(value: string) {
