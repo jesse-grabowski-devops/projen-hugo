@@ -20,17 +20,16 @@ export class HugoProject extends javascript.NodeProject {
   public readonly netlify: Netlify;
 
   constructor(options: HugoProjectOptions) {
-    super(options);
+    super({
+      ...options,
+      // if netlify is enabled, do not create github actions for release by default
+      release: options?.release ?? !(options?.netlifyConfiguration?.enabled ?? false),
+      buildWorkflow: options?.buildWorkflow ?? !(options?.netlifyConfiguration?.enabled ?? false),
+    });
 
     this.site = new Site(this, options);
     this.siteDirectories = new SiteDirectories(this, options);
 
     this.netlify = new Netlify(this, options);
-
-    if (options?.netlifyConfiguration?.enabled) {
-      // netlify manages CI/CD
-      this.removeTask('release');
-      this.removeTask('build');
-    }
   }
 }
