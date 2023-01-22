@@ -24,6 +24,7 @@ export class HugoProject extends javascript.NodeProject {
 
     this.site = new Site(this, options);
     this.siteDirectories = new SiteDirectories(this, options);
+
     this.netlify = new Netlify(this, options);
   }
 }
