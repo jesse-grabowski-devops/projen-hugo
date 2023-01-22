@@ -31,9 +31,11 @@ export interface HugoLanguagesConfiguration {
 
 export interface HugoLanguageConfiguration {
   readonly languagedirection?: string;
-  readonly title: string;
+  readonly languageName: string;
+  readonly contentDir?: string;
   readonly weight: number;
   readonly params?: any;
+  readonly title?: string;
 }
 
 export interface HugoMediaTypesConfiguration {
@@ -159,7 +161,7 @@ export interface HugoConfiguration {
   readonly themesDir?: string;
   readonly timeout?: string;
   readonly timeZone?: string;
-  readonly title: string;
+  readonly title?: string;
   readonly titleCaseStyle?: string;
   readonly uglyURLs?: boolean;
   readonly watch?: boolean;
