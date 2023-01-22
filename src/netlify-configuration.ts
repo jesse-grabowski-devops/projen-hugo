@@ -192,7 +192,7 @@ export class Netlify extends Component {
     return resolve({
       build: {
         publish: this.options?.netlifyConfiguration?.buildOptions?.publish ?? this.options?.hugoConfiguration?.publishDir ?? 'public',
-        command: this.options?.netlifyConfiguration?.buildOptions?.command ?? 'hugo -v -gc --minify',
+        command: this.options?.netlifyConfiguration?.buildOptions?.command ?? 'hugo -v -gc --minify --baseURL $URL',
         environment: this.options?.netlifyConfiguration?.buildOptions?.environment ?? {},
       },
       headers: this.synthHeaders(),

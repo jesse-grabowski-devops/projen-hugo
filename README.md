@@ -1,1 +1,1 @@
-# replace this
+     npx projen new --from @npm-jessegrabowski/projen-hugo@latest --netlify-configuration.enabled true
