@@ -190,7 +190,7 @@ export class Site extends Component {
   private synthSiteConfig() {
     let contents: any = {
       build: { writeStats: true },
-      module: (module ?? { mounts: [{ source: 'statis', target: 'static', excludeFiles: ['**/.gitkeep'] }] }),
+      module: { mounts: [{ source: 'statis', target: 'static', excludeFiles: ['**/.gitkeep'] }] },
       ignoreFiles: ['^.+\\.gitkeep$'],
     };
 
