@@ -3,6 +3,25 @@ import { resolve } from 'projen/lib/_resolve';
 import { arrayOfAll } from './helpers';
 import { HugoProjectOptions } from './hugo-project';
 
+export interface NetlifyRedirectConditionConfiguration {
+  readonly [key: string]: string[];
+}
+
+export interface NetlifyRedirectConfiguration {
+  readonly from: string;
+  readonly to: string;
+  readonly status?: number;
+  readonly force?: boolean;
+  readonly query?: any;
+  readonly conditions?: NetlifyRedirectConditionConfiguration;
+  readonly headers?: any;
+}
+
+export interface NetlifyRedirectsConfiguration {
+  readonly autoconfigureLanguage?: boolean;
+  readonly redirects?: NetlifyRedirectConfiguration[];
+}
+
 export interface NetlifyPluginConfiguration {
   readonly package: string;
   readonly inputs?: any;
@@ -154,6 +173,7 @@ export interface NetlifyConfiguration {
   readonly buildOptions?: NetlifyBuildConfiguration;
   readonly headers?: NetlifyHeadersConfiguration;
   readonly plugins?: NetlifyPluginsConfiguration;
+  readonly redirects?: NetlifyRedirectsConfiguration;
 }
 
 export class Netlify extends Component {
@@ -177,7 +197,34 @@ export class Netlify extends Component {
       },
       headers: this.synthHeaders(),
       plugins: this.synthPlugins(),
+      redirects: this.synthRedirects(),
     }, { omitEmpty: true });
+  }
+
+  private synthRedirects() {
+    let redirects = [...this.options?.netlifyConfiguration?.redirects?.redirects ?? []];
+    if ((this.options?.netlifyConfiguration?.redirects?.autoconfigureLanguage ?? true)
+        && (this.options?.hugoConfiguration?.defaultContentLanguageInSubdir)) {
+      const defaultLanguage = this.options?.hugoConfiguration?.defaultContentLanguage ?? 'en';
+      for (const language in this.options?.hugoConfiguration?.languages ?? {}) {
+        if (language !== defaultLanguage) {
+          redirects.push({
+            from: '/',
+            to: `/${language}/`,
+            conditions: {
+              Language: [language],
+            },
+            status: 302,
+          });
+        }
+      }
+      redirects.push({
+        from: '/',
+        to: `/${defaultLanguage}/`,
+        status: 302,
+      });
+    }
+    return redirects;
   }
 
   private synthPlugins() {
